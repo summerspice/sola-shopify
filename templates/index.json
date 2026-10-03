@@ -12,9 +12,14 @@
     "main": {
       "type": "hello-world",
       "settings": {}
+    },
+    "react_hello": {
+      "type": "react-hello",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "react_hello"
   ]
 }

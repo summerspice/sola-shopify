@@ -1,0 +1,19 @@
+{% comment %}
+  React island test: mounts src/components/HelloSola.tsx
+{% endcomment %}
+
+<div data-island="hello-sola">
+  <script type="application/json">
+    {
+      "shopName": {{ shop.name | json }}
+    }
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "React hello",
+  "settings": [],
+  "presets": [{ "name": "React hello" }]
+}
+{% endschema %}
