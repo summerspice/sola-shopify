@@ -15,3 +15,17 @@ node_modules/
 ## Release files
 release
 *.zip
+
+# Vite build output (run: npm run build)
+assets/*.js
+assets/vite-manifest.json
+snippets/vite-tag.liquid
+
+# Private
+docs/
+.claude/
+
+# Env and logs
+.env
+.env.*
+*.log

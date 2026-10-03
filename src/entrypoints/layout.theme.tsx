@@ -1,0 +1,1 @@
+console.log('SOLA: Vite is working');
