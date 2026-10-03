@@ -15,6 +15,3 @@ node_modules/
 ## Release files
 release
 *.zip
-
-## Local listings
-listings/
