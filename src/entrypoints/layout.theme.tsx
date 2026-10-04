@@ -8,6 +8,7 @@ const islands: Record<string, () => Promise<{ default: ComponentType<any> }>> = 
     'hello-sola': () => import('@/components/HelloSola'),
     'product-card': () => import('@/components/ProductCard'),
     'color-swatches': () => import('@/components/ColorSwatches'),
+    'size-selector': () => import('@/components/SizeSelector'),
 }
 
 // 2. Find every <div data-island="..."> and mount React into it
