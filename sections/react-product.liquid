@@ -1,0 +1,30 @@
+{% comment %}
+  React island: mounts src/components/ProductCard.tsx
+  Data comes from SOLA-api (our GraphQL BFF), not from Liquid.
+{% endcomment %}
+
+{% if section.settings.product != blank %}
+  <div data-island="product-card">
+    <script type="application/json">
+      {
+        "handle": {{ section.settings.product.handle | json }}
+      }
+    </script>
+  </div>
+{% else %}
+  <p>Choose a product in the theme editor.</p>
+{% endif %}
+
+{% schema %}
+{
+  "name": "React product card",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ],
+  "presets": [{ "name": "React product card" }]
+}
+{% endschema %}
