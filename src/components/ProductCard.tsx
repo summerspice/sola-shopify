@@ -1,22 +1,9 @@
-import { gql } from '@apollo/client'
+import { gql, type TypedDocumentNode } from '@apollo/client'
 import { useQuery } from '@apollo/client/react';
 
+type ProductCardVars = { handle: string }
 
-// 1. The query we send to SOLA-api (our own schema, not Shopify's)
-const GET_PRODUCT = gql`
-    query GetProductCard($handle: String!){
-        product(handle: $handle) {
-            id
-            title
-            imageUrl
-            availableForSale
-            price { 
-                amount
-                currencyCode
-            }
-        }
-    }
-`
+type Props = { handle: string }
 
 type ProductCardData = {
     product: {
@@ -31,13 +18,29 @@ type ProductCardData = {
     } | null
 }
 
-type ProductCardVars = { handle: string }
 
-type Props = { handle: string }
+// 1. The query we send to SOLA-api (our own schema, not Shopify's)
+const GET_PRODUCT: TypedDocumentNode<ProductCardData, ProductCardVars> = gql`
+    query GetProductCard($handle: String!){
+        product(handle: $handle) {
+            id
+            title
+            imageUrl
+            availableForSale
+            price { 
+                amount
+                currencyCode
+            }
+        }
+    }
+`
+
+
+
 
 export default function ProductCard({ handle }: Props) {
     // Run the query
-    const { data, loading, error } = useQuery<ProductCardData, ProductCardVars>(GET_PRODUCT, {
+    const { data, loading, error } = useQuery(GET_PRODUCT, {
         variables: { handle }
     })
 
