@@ -15,7 +15,26 @@
   <h1>{{ product.title }}</h1>
   <p>{{ product.price | money }}</p>
   <p>{{ product.description }}</p>
+
+
+{% comment %} 1. Current color, server-rendered (works without JS) {% endcomment %}
+{% if product.metafields.custom.color_name != blank %}
+    <p class="product-color">
+      {{ product.metafields.custom.color_group}}: {{ product.metafields.custom.color_name }}
+    </p>
+{% endif %}
+
+{% comment %} 2. Mount point: React adds the color swatches here {% endcomment %}
+<div data-island="color-swatches">
+  <script type="application/json">
+    { "handle": {{ product.handle | json }} }
+  </script>
 </div>
+
+ </div>
+
+
+
 
 <div class="product-form">
   {% form 'product', product %}
@@ -40,6 +59,12 @@
     {{ form | payment_button }}
   {% endform %}
 </div>
+
+
+{% comment %} 3. SEO: product structured data (JSON-LD) for Google {% endcomment %}
+<script type="application/ld+json">
+   {{ product | structured_data }}
+</script>
 
 {% schema %}
 {
