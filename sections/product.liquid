@@ -34,6 +34,7 @@
 <div data-island="size-selector">
   <script type="application/json">
     {
+      "handle": {{ product.handle | json }},
       "selectedId": {{ product.selected_or_first_available_variant.id }},
       "variants": [
         {%- for variant in product.variants -%}

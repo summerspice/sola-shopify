@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { gql, type TypedDocumentNode } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
+
 
 type Variant = {
     id: number;
@@ -7,30 +10,54 @@ type Variant = {
 }
 
 type Props = {
+    handle: string;
     selectedId: number;
     variants: Variant[];
 }
 
-export default function SizeSelector({ selectedId, variants }: Props) {
-    const [currentId, setCurrentId] = useState(selectedId)
+type Data = { product: { id: string; variants: { id: string; availableForSale: boolean }[] } | null }
+type Vars = { handle: string }
 
-    if (variants.length < 2) return null
+const GET_LIVE_STOCK: TypedDocumentNode<Data, Vars> = gql`
+  query GetLiveStock($handle: String!) {
+    product(handle: $handle) {
+      id
+      variants { id availableForSale }
+    }
+  }
+`
+
+export default function SizeSelector({ handle, selectedId, variants }: Props) {
+    const [currentId, setCurrentId] = useState(selectedId)
+    const { data } = useQuery(GET_LIVE_STOCK, { variables: { handle } })
+
+    const live = new Map(data?.product?.variants.map((v) => [v.id, v.availableForSale]))
+    const sizes = variants.map((v) => ({ ...v, available: live.get(String(v.id)) ?? v.available }))
 
     function choose(id: number) {
         setCurrentId(id)
-
         const field = document.querySelector<HTMLSelectElement | HTMLInputElement>(
             'form[action*="/cart/add"] [name="id"]',
         )
         if (field) field.value = String(id)
     }
 
+    useEffect(() => {
+        const current = sizes.find((s) => s.id === currentId)
+        if (current && !current.available) {
+            const next = sizes.find((s) => s.available)
+            if (next) choose(next.id)
+        }
+    }, [data])
+
+    if (variants.length < 2) return null
+
 
     return (
         <div>
             <p>Size</p>
             <div style={{ display: 'flex', gap: 8 }}>
-                {variants.map((v) => {
+                {sizes.map((v) => {
                     const selected = v.id === currentId
                     return (
                         <button
