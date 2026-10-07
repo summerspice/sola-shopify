@@ -45,7 +45,7 @@
       </shopify-account>
     {% endif %}
 
-    <a href="{{ routes.cart_url }}">
+    <a href="{{ routes.cart_url }}" aria-label="Cart{% if cart.item_count > 0 %}, {{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items'}}{% endif %}">
       {% if cart.item_count > 0 %}
         <sup>{{ cart.item_count }}</sup>
       {% endif %}
