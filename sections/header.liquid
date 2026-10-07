@@ -3,11 +3,40 @@
     {{ shop.name | link_to: routes.root_url }}
   </h2>
 
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+  <nav class="header__menu" aria-label="Main">
+    <ul class="menu">
+      {% for link in section.settings.menu.links %}
+        <li class="menu__item{% if link.links != blank %} menu__item--has-panel {% endif %}">
+          <a href="{{ link.url }}" class="menu__link"{% if link.current %} aria-current="page"{% endif %}>
+          {{ link.title }}
+          </a>
+
+          {% if link.links != blank %}
+            <div class="mega">
+              <div class="mega__inner">
+                {% for childlink in link.links %}
+                  <div class="mega__column">
+                    <a href="{{ childlink.url }}" class="mega__title">{{ childlink.title }}</a>
+
+                    {% if childlink.links != blank %}
+                      <ul class="mega__list">
+                        {% for grandchildlink in childlink.links %}
+                          <li><a href="{{ grandchildlink.url }}">{{ grandchildlink.title }}</a></li>
+                        {% endfor %}
+                       </ul>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+  </ul>
+</nav>
+
+                      
+
 
   <div class="header__icons">
     {% if shop.customer_accounts_enabled %}
@@ -55,6 +84,69 @@
     display: flex;
     gap: 1rem;
   }
+
+    /* ---- Mega menu ---- */
+  header {
+    position: relative;              /* panel is positioned from the header */
+  }
+  header .header__menu {
+    align-self: stretch;             /* nav = full header height */
+  }
+  .menu {
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .menu__item {
+    display: flex;                   /* item = full height → no hover gap */
+    align-items: center;
+  }
+
+  /* Panel: hidden by default */
+  .mega {
+    position: absolute;
+    top: 100%;                       /* right under the header */
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: var(--color-background, #fff);
+    border-top: 1px solid #eee;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.15s ease, visibility 0.15s;
+  }
+
+  /* Show on hover OR keyboard focus inside */
+  .menu__item--has-panel:hover .mega,
+  .menu__item--has-panel:focus-within .mega {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Columns */
+  .mega__inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 2rem;
+    padding: 2rem var(--page-margin, 2rem);
+  }
+  .mega a {
+    justify-content: flex-start;     /* undo "center" from header a */
+  }
+  .mega__title {
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+  }
+  .mega__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -64,7 +156,8 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
+      "label": "t:labels.menu",
+      "default": "main-menu"
     },
     {
       "type": "link_list",
