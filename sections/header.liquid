@@ -120,8 +120,9 @@
   }
 
   /* Show on hover OR keyboard focus inside */
-  .menu__item--has-panel:hover .mega,
-  .menu__item--has-panel:focus-within .mega {
+  .header__menu:not(.js-mega) .menu__item--has-panel:hover .mega,
+  .menu__item--has-panel:focus-within .mega,
+  .menu__item--has-panel.is-open .mega {
     visibility: visible;
     opacity: 1;
   }

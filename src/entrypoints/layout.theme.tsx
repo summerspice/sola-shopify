@@ -2,6 +2,7 @@ import { lazy, Suspense, type ComponentType } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ApolloProvider } from '@apollo/client/react'
 import { apolloClient } from '@/lib/apollo'
+import { initMegaMenu } from '@/lib/megaMenu'
 
 // 1. Island list: name used in Liquid → component file
 const islands: Record<string, () => Promise<{ default: ComponentType<any> }>> = {
@@ -37,3 +38,4 @@ function mountIslands() {
 }
 
 mountIslands()
+initMegaMenu()
