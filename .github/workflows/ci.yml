@@ -1,5 +1,8 @@
 name: CI
-on: [push]
+on: workflow_dispatch   # manual only: GitHub → Actions → CI → Run workflow
+permissions:
+  contents: read     # read your code (checkout)
+  checks: write      # post Theme Check results
 jobs:
   theme-check:
     name: Theme Check
